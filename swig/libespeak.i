@@ -1,4 +1,4 @@
-%module espeak
+%module libespeak
 %{
 /* Includes the header in the wrapper code */
 #include "/usr/include/espeak-ng/speak_lib.h"
@@ -7,7 +7,7 @@
 
 %insert("lisphead") %{
 (cffi:load-foreign-library "libespeak-ng.so") 
-(in-package #:espeak-ng)
+(in-package #:libespeak-ng)
 (defmacro define-constant (name value &optional doc)
   `(defconstant ,name (if (boundp ',name) (symbol-value ',name) ,value)
                       ,@(when doc (list doc))))

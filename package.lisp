@@ -1,4 +1,4 @@
 ;;;; package.lisp
 
-(defpackage #:espeak-ng
+(defpackage #:libespeak-ng
   (:use #:cl))
