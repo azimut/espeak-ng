@@ -1,6 +1,6 @@
 ;;;; package.lisp
 
-(uiop:define-package #:libespeak-ng
+(uiop:define-package #:espeak-ng
   (:use #:cl)
   (:export #:epeak-info
            #:smalltalk

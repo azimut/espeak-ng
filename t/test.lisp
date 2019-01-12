@@ -1,4 +1,4 @@
-(in-package #:libespeak-ng)
+(in-package #:espeak-ng)
 
 (cffi:defcallback ctestr :int ((wav :pointer) (num :int) (pev :pointer))
   (declare (ignore pev))

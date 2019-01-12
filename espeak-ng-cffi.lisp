@@ -5,7 +5,7 @@
 ;;; the SWIG interface file instead.
 
 (cffi:load-foreign-library "libespeak-ng.so") 
-(in-package #:libespeak-ng)
+(in-package #:espeak-ng)
 (defmacro define-constant (name value &optional doc)
   `(defconstant ,name (if (boundp ',name) (symbol-value ',name) ,value)
                       ,@(when doc (list doc))))

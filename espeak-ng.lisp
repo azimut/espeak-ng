@@ -1,6 +1,6 @@
-;;;; libespeak-ng.lisp
+;;;; espeak-ng.lisp
 
-(in-package #:libespeak-ng)
+(in-package #:espeak-ng)
 
 ;;--------------------------------------------------
 ;; Type
