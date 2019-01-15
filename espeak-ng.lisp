@@ -55,12 +55,36 @@
                       (cffi:null-pointer) (cffi:null-pointer))))))
 
 (defun talk (text &key (language "en")
-                          (pitch 50) (range 50) (volume 100) (rate 180))
+                    (pitch 50) (range 50) (volume 100) (rate 175)
+                    (wordgap -1) (punctuation -1) (capitals -1) (linelength -1))
   "Plays the given string in TEXT directly on the speaker.
-   Needs espeak-ng compiled with pcaudiolib."
+   Needs espeak-ng compiled with pcaudiolib.
+      espeakRATE:    speaking speed in word per minute.  Values 80 to 450.
+
+      espeakVOLUME:  volume in range 0-200 or more.
+                     0=silence, 100=normal full volume, greater values may produce amplitude compression or distortion
+
+      espeakPITCH:   base pitch, range 0-100.  50=normal
+
+      espeakRANGE:   pitch range, range 0-100. 0-monotone, 50=normal
+
+      espeakPUNCTUATION:  which punctuation characters to announce:
+         value in espeak_PUNCT_TYPE (none, all, some),
+         see espeak_GetParameter() to specify which characters are announced.
+
+      espeakCAPITALS: announce capital letters by:
+         0=none,
+         1=sound icon,
+         2=spelling,
+         3 or higher, by raising pitch.  This values gives the amount in Hz by which the pitch
+            of a word raised to indicate it has a capital letter.
+
+      espeakWORDGAP:  pause between words, units of 10mS (at the default speed)
+"
   (declare (type string text language)
            (type (integer 0 100) pitch range)
            (type (integer 0 200) volume)
+           (type (integer -1 1000) capitals)
            (type (integer 80 450) rate))
   (with-espeak (:AUDIO_OUTPUT_SYNCH_PLAYBACK 0 (cffi:null-pointer) 0)
     (espeak_setsynthcallback (cffi:callback ctest))
@@ -73,5 +97,9 @@
         (espeak_setparameter :espeakrate rate 0)
         (espeak_setparameter :espeakvolume volume 0)
         (espeak_setparameter :espeakrange range 0)
+        (when (>= wordgap 0) (espeak_setparameter :espeakwordgap wordgap 0))
+        (when (>= punctuation 0) (espeak_setparameter :espeakpunctuation punctuation 0))
+        (when (>= capitals 0) (espeak_setparameter :espeakcapitals capitals 0))
+        (when (>= linelength 0) (espeak_setparameter :espeaklinelength linelength 0))
         (espeak_synth stext text-size 0 0 0 ESPEAKCHARS_AUTO
                       (cffi:null-pointer) (cffi:null-pointer))))))
