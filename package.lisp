@@ -5,4 +5,5 @@
   (:export #:epeak-info
            #:smalltalk
            #:talk
-           #:with-espeak))
+           #:with-espeak
+           #:with-sinsy))

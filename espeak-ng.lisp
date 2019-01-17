@@ -15,12 +15,23 @@
 
 ;;--------------------------------------------------
 
+(defmacro with-sinsy (&body body)
+  "Macro useful to initialize and terminate and cleanup
+   sinsy/ecantorix state."
+  `(unwind-protect
+        (progn (sinsy_ng_init)
+               ,@body)
+     (sinsy_ng_term)))
+
 (defmacro with-espeak ((output buflength path options) &body body)
   "Macro useful to initialize espeak and make sure is terminated
    once finished. Keep in mind that if you call terminate twice
    it will get blocked."
   `(unwind-protect
-        (when (plusp (espeak_initialize ,output ,buflength ,path ,options))
+        (when (plusp (espeak_initialize ,output
+                                        ,buflength
+                                        ,path
+                                        ,options))
           ,@body)
      (espeak_terminate)))
 
