@@ -4,7 +4,7 @@
 ;;; Do not make changes to this file unless you know what you are doing--modify
 ;;; the SWIG interface file instead.
 
-(cffi:load-foreign-library "libespeak-ng.so") 
+(cffi:load-foreign-library "libespeak-ng.so")
 (in-package #:espeak-ng)
 (defmacro define-constant (name value &optional doc)
   `(defconstant ,name (if (boundp ',name) (symbol-value ',name) ,value)
@@ -604,20 +604,24 @@
 
 (cl:export 'sinsy_ng_Init)
 
+(cffi:defcfun ("sinsy_ng_Term" sinsy_ng_Term) espeak_ng_STATUS)
+
+(cl:export 'sinsy_ng_Term)
+
 (cffi:defcfun ("sinsy_ng_addNote" sinsy_ng_addNote) espeak_ng_STATUS
-  (duration :pointer)
+  (duration :uint)
   (lyric :string)
-  (pitch :pointer)
-  (accent :pointer)
-  (staccato :pointer)
+  (pitch :uint)
+  (accent :bool)
+  (staccato :bool)
   (slurType :int)
   (syllabicType :int)
-  (breath :pointer))
+  (breath :bool))
 
 (cl:export 'sinsy_ng_addNote)
 
 (cffi:defcfun ("sinsy_ng_addRest" sinsy_ng_addRest) espeak_ng_STATUS
-  (duration :pointer))
+  (duration :uint))
 
 (cl:export 'sinsy_ng_addRest)
 
