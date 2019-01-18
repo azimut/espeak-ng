@@ -225,8 +225,8 @@
 (cl:export 'espeakKEEP_NAMEDATA)
 
 (cffi:defcfun ("espeak_Synth" espeak_Synth) espeak_ERROR
-  (text :pointer)
-  (size :pointer)
+  (text :string)
+  (size :unsigned-int)
   (position :unsigned-int)
   (position_type espeak_POSITION_TYPE)
   (end_position :unsigned-int)

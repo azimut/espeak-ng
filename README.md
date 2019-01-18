@@ -11,6 +11,8 @@ To ear the output directly from espeak with the helpers provided, you need to ha
 ```
 ### incudine
 Simple code to write back synthesized output back to a incudine buffer *TMPBUF*.
+<details><summary>expand</summary>
+<p>
 ```
 (defvar *max-samples* (* 22050 10))
 (defvar *tmpbuf* (incudine:make-buffer *max-samples* :sample-rate 22050))
@@ -19,8 +21,7 @@ Simple code to write back synthesized output back to a incudine buffer *TMPBUF*.
                               (n-samples :int)
                               (events :pointer))
   (declare (ignore events) (optimize (speed 3))
-           (type fixnum *max-samples* *n-samples* n-samples)
-           )
+           (type fixnum *max-samples* *n-samples* n-samples))
   (when (and wav (< *n-samples* *max-samples*))
     (dotimes (i n-samples)
       (setf (incudine:buffer-value *tmpbuf* (+ *n-samples* i))
@@ -34,18 +35,16 @@ Simple code to write back synthesized output back to a incudine buffer *TMPBUF*.
   (setf *n-samples* 0)
   (with-espeak (:AUDIO_OUTPUT_SYNCHRONOUS 0 (cffi:null-pointer) 0)
     (espeak_setsynthcallback (cffi:callback wtest))
-    (cffi:with-foreign-object (text-size 'size)
-      (setf (cffi:mem-ref text-size 'size) (1+ (length text)))
-      (cffi:with-foreign-strings ((lang language)
-                                  (stext text))
-        (espeak_setvoicebyname lang)
-        (espeak_synth stext text-size 0 0 0 ESPEAKCHARS_AUTO
-                      (cffi:null-pointer) (cffi:null-pointer)))))
+    (espeak_setvoicebyname language)
+    (espeak_synth text (1+ (length text)) 0 0 0 ESPEAKCHARS_AUTO
+                  (cffi:null-pointer) (cffi:null-pointer)))
   (incudine:normalize-buffer *tmpbuf* 1)
   (incudine:resize-buffer *tmpbuf* (min *max-samples* (+ 22050 *n-samples*)))
   (format T "~%Nr of samples generated: ~a" *n-samples*)
   T)
 ```
+</p>
+</details>
 
 ## TODO
 * Indirect play the audio without pcaudiolib (ex: sdlmix, libout123)

@@ -57,13 +57,9 @@
   (declare (type string text language))
   (with-espeak (:AUDIO_OUTPUT_SYNCH_PLAYBACK 0 (cffi:null-pointer) 0)
     (espeak_setsynthcallback (cffi:callback ctest))
-    (cffi:with-foreign-object (text-size 'size)
-      (setf (cffi:mem-ref text-size 'size) (1+ (length text)))
-      (cffi:with-foreign-strings ((lang language)
-                                  (stext text))
-        (espeak_setvoicebyname lang)
-        (espeak_synth stext text-size 0 0 0 ESPEAKCHARS_AUTO
-                      (cffi:null-pointer) (cffi:null-pointer))))))
+    (espeak_setvoicebyname language)
+    (espeak_synth text (1+ (length text)) 0 0 0 ESPEAKCHARS_AUTO
+                  (cffi:null-pointer) (cffi:null-pointer))))
 
 (defun talk (text &key (language "en")
                     (pitch 50) (range 50) (volume 100) (rate 175)
@@ -99,18 +95,31 @@
            (type (integer 80 450) rate))
   (with-espeak (:AUDIO_OUTPUT_SYNCH_PLAYBACK 0 (cffi:null-pointer) 0)
     (espeak_setsynthcallback (cffi:callback ctest))
-    (cffi:with-foreign-object (text-size 'size)
-      (setf (cffi:mem-ref text-size 'size) (1+ (length text)))
-      (cffi:with-foreign-strings ((lang language)
-                                  (stext text))
-        (espeak_setvoicebyname lang)
-        (espeak_setparameter :espeakpitch pitch 0)
-        (espeak_setparameter :espeakrate rate 0)
-        (espeak_setparameter :espeakvolume volume 0)
-        (espeak_setparameter :espeakrange range 0)
-        (when (>= wordgap 0) (espeak_setparameter :espeakwordgap wordgap 0))
-        (when (>= punctuation 0) (espeak_setparameter :espeakpunctuation punctuation 0))
-        (when (>= capitals 0) (espeak_setparameter :espeakcapitals capitals 0))
-        (when (>= linelength 0) (espeak_setparameter :espeaklinelength linelength 0))
-        (espeak_synth stext text-size 0 0 0 ESPEAKCHARS_AUTO
-                      (cffi:null-pointer) (cffi:null-pointer))))))
+    (espeak_setvoicebyname language)
+    (espeak_setparameter :espeakpitch pitch 0)
+    (espeak_setparameter :espeakrate rate 0)
+    (espeak_setparameter :espeakvolume volume 0)
+    (espeak_setparameter :espeakrange range 0)
+    (when (>= wordgap 0) (espeak_setparameter :espeakwordgap wordgap 0))
+    (when (>= punctuation 0) (espeak_setparameter :espeakpunctuation punctuation 0))
+    (when (>= capitals 0) (espeak_setparameter :espeakcapitals capitals 0))
+    (when (>= linelength 0) (espeak_setparameter :espeaklinelength linelength 0))
+    (espeak_synth text (1+ (length text)) 0 0 0 ESPEAKCHARS_AUTO
+                  (cffi:null-pointer) (cffi:null-pointer))))
+
+
+
+
+(defun smalltalk-wav (&optional (text "this") (language "en"))
+  "Renders given TEXT and returns samples back to callback function."
+  (declare (type string text language))
+  (setf *n-samples* 0)
+  (with-espeak (:AUDIO_OUTPUT_SYNCHRONOUS 0 (cffi:null-pointer) 0)
+    (espeak_setsynthcallback (cffi:callback wtest))
+    (espeak_setvoicebyname language)
+    (espeak_synth text (1+ (length text)) 0 0 0 ESPEAKCHARS_AUTO
+                  (cffi:null-pointer) (cffi:null-pointer)))
+  (incudine:normalize-buffer *tmpbuf* 1)
+  (incudine:resize-buffer *tmpbuf* (min *max-samples* (+ 22050 *n-samples*)))
+  (format T "~%Nr of samples generated: ~a" *n-samples*)
+  T)
