@@ -58,7 +58,7 @@
   (with-espeak (:AUDIO_OUTPUT_SYNCH_PLAYBACK 0 (cffi:null-pointer) 0)
     (espeak_setsynthcallback (cffi:callback ctest))
     (espeak_setvoicebyname language)
-    (espeak_synth text (1+ (length text)) 0 0 0 ESPEAKCHARS_AUTO
+    (espeak_synth text (1+ (length text)) 0 0 0 (logior ESPEAKCHARS_AUTO ESPEAKPHONEMES)
                   (cffi:null-pointer) (cffi:null-pointer))))
 
 (defun talk (text &key (language "en")
@@ -104,5 +104,5 @@
     (when (>= punctuation 0) (espeak_setparameter :espeakpunctuation punctuation 0))
     (when (>= capitals 0) (espeak_setparameter :espeakcapitals capitals 0))
     (when (>= linelength 0) (espeak_setparameter :espeaklinelength linelength 0))
-    (espeak_synth text (1+ (length text)) 0 0 0 ESPEAKCHARS_AUTO
+    (espeak_synth text (1+ (length text)) 0 0 0 (logior ESPEAKCHARS_AUTO ESPEAKPHONEMES)
                   (cffi:null-pointer) (cffi:null-pointer))))
