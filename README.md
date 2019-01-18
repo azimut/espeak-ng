@@ -10,9 +10,7 @@ To ear the output directly from espeak with the helpers provided, you need to ha
 > (talk "hello world!" :pitch 50 :range 100 :volume 100 :rate 90)
 ```
 ### incudine
-Simple code to write back synthesized output back to a incudine buffer *TMPBUF*.
-<details><summary>expand</summary>
-<p>
+Simple code to write back synthesized output back to a incudine buffer `*TMPBUF*`.
 ```
 (defvar *max-samples* (* 22050 10))
 (defvar *tmpbuf* (incudine:make-buffer *max-samples* :sample-rate 22050))
@@ -43,8 +41,6 @@ Simple code to write back synthesized output back to a incudine buffer *TMPBUF*.
   (format T "~%Nr of samples generated: ~a" *n-samples*)
   T)
 ```
-</p>
-</details>
 
 ## TODO
 * Indirect play the audio without pcaudiolib (ex: sdlmix, libout123)
