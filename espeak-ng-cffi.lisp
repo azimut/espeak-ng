@@ -329,7 +329,7 @@
 (cl:export 'espeak_SetPhonemeTrace)
 
 (cffi:defcfun ("espeak_TextToPhonemes" espeak_TextToPhonemes) :string
-  (textptr :pointer)
+  (textptr :string)
   (textmode :int)
   (phonememode :int))
 
