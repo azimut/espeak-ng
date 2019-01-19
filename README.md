@@ -42,6 +42,10 @@ Simple code to write back synthesized output back to a incudine buffer `*TMPBUF*
   T)
 ```
 
+## See also
+* https://github.com/divVerent/ecantorix
+* https://notabug.org/isengaara/qtau
+
 ## TODO
 * Indirect play the audio without pcaudiolib (ex: sdlmix, libout123)
 * Store .wav file example
