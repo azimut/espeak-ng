@@ -43,7 +43,9 @@ Simple code to write back synthesized output back to a incudine buffer `*TMPBUF*
 ```
 
 ## See also
+* https://github.com/NorskJoe/sinsy-project/
 * https://github.com/divVerent/ecantorix
+* https://notabug.org/isengaara/2018-voice
 * https://notabug.org/isengaara/qtau
 
 ## TODO
