@@ -50,6 +50,7 @@
                                           ESPEAKINITIALIZE_DONT_EXIT)
     (espeak_listvoices (cffi:null-pointer))))
 
+;;--------------------------------------------------
 ;; https://github.com/samy280497/ASG/blob/master/endsem/final%20presentation/tts%20in%20c/tts.c
 (defun smalltalk (&optional (text "this") (language "en"))
   "Plays the given string in TEXT directly on the speaker. Needs espeak-ng
@@ -106,3 +107,35 @@
     (when (>= linelength 0) (espeak_setparameter :espeaklinelength linelength 0))
     (espeak_synth text (1+ (length text)) 0 0 0 (logior ESPEAKCHARS_AUTO ESPEAKPHONEMES)
                   (cffi:null-pointer) (cffi:null-pointer))))
+
+;;--------------------------------------------------
+
+(defun split-phonemes (text &optional (phoniphy-p))
+  "Helper to cleanup and split a string of text
+   consisting of espeak phonemes."
+  (let*	((phonemes (subseq text 1))
+         (phonemes-list
+          (cl-ppcre:split ",|'|[ ]" phonemes))
+         (phonemes-list
+          (remove "" phonemes-list :test #'string=))
+         (phonemes-list
+          (remove " " phonemes-list :test #'string=)))
+    (if phoniphy-p
+        (map 'list (lambda (x) (format NIL "[[~a]]" x))
+             phonemes-list)
+        phonemes-list)))
+
+(defun text-to-phonemes (text &optional (language "en-us") phoniphy-p)
+  "User helper to get phonemes back from espeak-ng.
+   > (espeak-ng::text-to-phonemes \"I know nothing\")
+     (\"aI\" \"n\" \"oU\" \"n\" \"VTIN\")"
+  (declare (type string text language))
+  (with-espeak (:AUDIO_OUTPUT_SYNCHRONOUS 0 (cffi:null-pointer) 0)
+    (cffi:with-foreign-string (s text)
+      (cffi:with-foreign-object (p :pointer)
+        (espeak_setsynthcallback (cffi:callback ctest))
+        (espeak_setvoicebyname language)
+        (setf (cffi:mem-aref p :pointer) s)
+        (split-phonemes
+         (espeak_texttophonemes p ESPEAKCHARS_UTF8 0)
+         phoniphy-p)))))
