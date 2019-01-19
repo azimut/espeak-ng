@@ -6,7 +6,8 @@
   :license  "Specify license here"
   :version "0.0.1"
   :serial t
-  :depends-on (#:cffi)
+  :depends-on (#:cffi
+               #:cl-ppcre)
   :components ((:file "package")
                (:file "espeak-ng-cffi")
                (:file "espeak-ng")))
