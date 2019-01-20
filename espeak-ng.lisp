@@ -110,12 +110,12 @@
 
 ;;--------------------------------------------------
 
-(defun split-phonemes (text &optional (phoniphy-p))
+(defun split-phonemes (text &optional (phoniphy-p) (split-by ",|'|[ ]"))
   "Helper to cleanup and split a string of text
    consisting of espeak phonemes."
   (let*	((phonemes (subseq text 1))
          (phonemes-list
-          (cl-ppcre:split ",|'|[ ]" phonemes))
+          (cl-ppcre:split split-by phonemes))
          (phonemes-list
           (remove "" phonemes-list :test #'string=))
          (phonemes-list
@@ -125,7 +125,7 @@
              phonemes-list)
         phonemes-list)))
 
-(defun text-to-phonemes (text &optional (language "en-us") phoniphy-p)
+(defun text-to-phonemes (text &optional (language "en-us") phoniphy-p (split-by ",|'|[ ]"))
   "User helper to get phonemes back from espeak-ng.
    > (espeak-ng::text-to-phonemes \"I know nothing\")
      (\"aI\" \"n\" \"oU\" \"n\" \"VTIN\")"
@@ -138,4 +138,5 @@
         (setf (cffi:mem-aref p :pointer) s)
         (split-phonemes
          (espeak_texttophonemes p ESPEAKCHARS_UTF8 0)
-         phoniphy-p)))))
+         phoniphy-p
+         split-by)))))
