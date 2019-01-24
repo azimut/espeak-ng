@@ -15,7 +15,7 @@
 
 ;;--------------------------------------------------
 
-(defmacro with-sinsy (&body body)
+(defmacro with-sinsy (() &body body)
   "Macro useful to initialize and terminate and cleanup
    sinsy/ecantorix state."
   `(unwind-protect
